@@ -81,15 +81,6 @@
         
         "image_path":  "scenario_items/Wind keybw.png",
 	"obtained_value": "" 
-    },
-    "Mermaid Jade": {
-        
-        "image_path":  "scenario_items/Mermaid Jade bw.png",
-	"obtained_value": "" 
-    },
-    "Engine": {
-        
-        "image_path":  "scenario_items/enginebw.png",
-        "obtained_value": ""
     }
+    
 }
