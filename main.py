@@ -49,7 +49,7 @@ class Lufia2TrackerApp:
         self.map_address = os.path.join(IMAGES_DIR / "map", "map.jpg")
         self.LOCATIONS = LOCATIONS
         
-        
+        self.location_character_images = {}
         self.item_spells = item_spells
         self.inventory = {}
         self.scenario_items = {}

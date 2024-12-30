@@ -25,8 +25,8 @@ logging.basicConfig(
 map_address = os.path.join(IMAGES_DIR, "map", "map.jpg")
 
 def setup_item_canvas(root):
-    item_canvas = tk.Canvas(root, bg='black', width=301, height=93)
-    item_canvas.place(x=1, y=285, width=301, height=93)
+    item_canvas = tk.Canvas(root, bg='black', width=301, height=284)
+    item_canvas.place(x=1, y=1, width=301, height=284)
     item_canvas.create_text(10, 10, anchor="w", text="Items / Spells:", fill="white", font=("Arial", 10))
     
     # Configure the canvas scroll region
@@ -39,17 +39,17 @@ def setup_item_canvas(root):
     return item_canvas
 
 def setup_tools_canvas(root, tools_keys, tool_click_callback, image_cache):
-    tools_canvas = tk.Canvas(root, bg='black', width=302, height=70)
+    tools_canvas = tk.Canvas(root, bg='black', width=290, height=60)
     tools_canvas.images = []
-    tools_canvas.place(x=1, y=220, width=302, height=70)
+    tools_canvas.place(x=300, y=204, width=290, height=60)
 
     tool_images = {}
     for i, key in enumerate(tools_keys):
         image_path = tool_items_bw[key]["image_path"]
         image = load_image_cached(image_path, image_cache)
         if image:
-            x = 20 + i * 60
-            y = 15
+            x = 10 + i *40
+            y = 5
             image_id = tools_canvas.create_image(x, y, anchor="nw", image=image)
             tools_canvas.create_text(x + 13, y + 32, anchor="n", text=key, fill="white", font=("Arial", 8))
             tool_images[key] = {'image': image, 'position': image_id}
@@ -59,15 +59,15 @@ def setup_tools_canvas(root, tools_keys, tool_click_callback, image_cache):
     return tools_canvas, tool_images
 
 def setup_maidens_canvas(root, characters, characters_bw, image_cache, app, on_maiden_click):
-    maidens_canvas = tk.Canvas(root, bg='black', width=202, height=67) 
+    maidens_canvas = tk.Canvas(root, bg='black', width=120, height=57) 
     maidens_canvas.images = []
-    maidens_canvas.place(x=300, y=223, width=202, height=67)
+    maidens_canvas.place(x=580, y=204, width=120, height=57)
 
     maiden_images = {}
     
     maiden_names = ["Claire", "Lisa", "Marie"]
-    start_x = 20
-    row_y = 3
+    start_x = 1
+    row_y = 1
 
     def get_bw_image_path(original_path):
         base, ext = os.path.splitext(original_path)
@@ -86,7 +86,7 @@ def setup_maidens_canvas(root, characters, characters_bw, image_cache, app, on_m
                 image = load_image_cached(image_path_to_load, image_cache, size=(40, 40))
 
                 if image:
-                    x = start_x + i * 60
+                    x = start_x + i * 40
                     image_id = maidens_canvas.create_image(x, y, anchor="nw", image=image)
                     maidens_canvas.create_text(x + 20, y + 40, anchor="n", text=name, fill="white", font=("Arial", 8))
                     maiden_images[name] = {
@@ -111,8 +111,8 @@ def setup_maidens_canvas(root, characters, characters_bw, image_cache, app, on_m
 
 def setup_hints_canvas(root):
     # Create the Text widget
-    hints_canvas = tk.Text(root, bg='black', fg='white', width=298, height=426, wrap='word', insertbackground='white')
-    hints_canvas.place(x=3, y=378, width=298, height=426)
+    hints_canvas = tk.Text(root, bg='black', fg='white', width=298, height=500, wrap='word', insertbackground='white')
+    hints_canvas.place(x=3, y=285, width=298, height=500)
     
     # Configure the Text widget to have a specific font
     hints_canvas.configure(font=("Helvetica", 10))
@@ -140,10 +140,10 @@ def setup_canvas(root, map_address, locations, location_logic, inventory, scenar
     try:
         canvas = tk.Canvas(root, bg='black', width=300, height=70)
         canvas.images = []
-        canvas.place(x=300, y=285, width=570, height=520)
+        canvas.place(x=300, y=407, width=400, height=380)
 
         map_image = Image.open(map_address)
-        resized_map_image = map_image.resize((570, 520), Image.Resampling.LANCZOS)
+        resized_map_image = map_image.resize((400, 380), Image.Resampling.LANCZOS)
         map_photo = ImageTk.PhotoImage(resized_map_image)
         canvas.create_image(0, 0, anchor=tk.NW, image=map_photo)
         canvas.map_photo = map_photo
@@ -169,10 +169,10 @@ def setup_canvas(root, map_address, locations, location_logic, inventory, scenar
             
             if index < city_limit:
                 # Draw circles for cities
-                dot = canvas.create_oval(x_scaled - 7, y_scaled - 7, x_scaled + 7, y_scaled + 7, fill=color, outline=color, tags=f"dot_{location}")
+                dot = canvas.create_oval(x_scaled - 7, y_scaled - 7, x_scaled + 7, y_scaled + 7, fill=color, tags=f"dot_{location}")
             else:
                 # Draw rectangles for other locations
-                dot = canvas.create_rectangle(x_scaled - 7, y_scaled - 7, x_scaled + 7, y_scaled + 7, fill=color, outline=color, tags=f"dot_{location}")
+                dot = canvas.create_rectangle(x_scaled - 7, y_scaled - 7, x_scaled + 7, y_scaled + 7, fill=color, tags=f"dot_{location}")
 
             #label = canvas.create_text(x_scaled, y_scaled - 10, text=location, fill="white", anchor="s", tags=f"label_{location}")
             location_labels[location] = dot
@@ -187,7 +187,7 @@ def setup_canvas(root, map_address, locations, location_logic, inventory, scenar
             canvas.tag_bind(dot, "<Enter>", lambda event, text=tooltip_text: tooltips[event.widget.find_withtag("current")[0]].showtip(text, event.x_root, event.y_root))
             canvas.tag_bind(dot, "<Leave>", lambda event: tooltips[event.widget.find_withtag("current")[0]].hidetip())
             canvas.tag_bind(dot, "<Button-1>", lambda event, loc=location: dot_click_callback(loc))
-
+            
             if right_click_callback:
                 canvas.tag_bind(dot, "<Button-3>", lambda event, loc=location: right_click_callback(event, loc))
 
@@ -197,18 +197,18 @@ def setup_canvas(root, map_address, locations, location_logic, inventory, scenar
         raise
 
 def setup_scenario_canvas(root, scenario_keys, item_to_location, scenario_click_callback, image_cache):
-    scenario_canvas = tk.Canvas(root, bg='black', width=370, height=288)
+    scenario_canvas = tk.Canvas(root, bg='black', width=400, height=150)
     scenario_canvas.images = []
-    scenario_canvas.place(x=500, y=2, width=370, height=288) 
+    scenario_canvas.place(x=300, y=259, width=400, height=150) 
 
     scenario_images = {}
     tooltips = {}
 
     # Constants for grid layout
-    columns = 4  # Number of columns
-    spacing_x = 90  # Horizontal spacing between items
-    spacing_y = 55  # Vertical spacing between items
-    start_x = 35  # Starting X position
+    columns = 6  # Number per row
+    spacing_x = 65  # Horizontal spacing between items
+    spacing_y = 50  # Vertical spacing between items
+    start_x = 30  # Starting X position
     start_y = 5  # Starting Y position
 
     # Calculate total number of rows needed
@@ -218,13 +218,13 @@ def setup_scenario_canvas(root, scenario_keys, item_to_location, scenario_click_
         item_info = scenario_items_bw[key]
         image_path = item_info["image_path"]
         
-        image = load_image_with_size(image_path, image_cache, size=(30, 30))
+        image = load_image_with_size(image_path, image_cache, size=(40, 40))
 
         if image:
             col = i % columns  # Column position
             row = i // columns  # Row position
             
-            # Center the last row if it is not a full row
+            # Center the last row if it is not a full row (angepasst für Reihen)
             if row == total_rows - 1 and len(scenario_keys) % columns != 0:
                 start_x_adjusted = start_x + ((columns - len(scenario_keys) % columns) * spacing_x) / 2
                 x = start_x_adjusted + col * spacing_x
@@ -257,13 +257,13 @@ def setup_scenario_canvas(root, scenario_keys, item_to_location, scenario_click_
     return scenario_canvas, scenario_images
 
 def setup_characters_canvas(root, characters, image_cache, app):
-    characters_canvas = tk.Canvas(root, bg='black', width=501, height=223)
+    characters_canvas = tk.Canvas(root, bg='black', width=400, height=205)
     characters_canvas.images = []
-    characters_canvas.place(x=1, y=2, width=501, height=223)
+    characters_canvas.place(x=300, y=1, width=400, height=205)
     
 
     character_images = {}
-    start_x = 15
+    start_x = 3
     y = 5
 
     first_row_characters = list(characters.keys())[:7]
@@ -281,9 +281,9 @@ def setup_characters_canvas(root, characters, image_cache, app):
             image = load_image_cached(image_path_to_load, image_cache, size=(40, 40))
 
             if image:
-                x = start_x + i * 72
+                x = start_x + i * 56
                 image_id = characters_canvas.create_image(x, y, anchor="nw", image=image)
-                characters_canvas.create_text(x + 20, y + 40, anchor="n", text=name, fill="white", font=("Arial", 10))
+                characters_canvas.create_text(x + 20, y + 40, anchor="n", text=name, fill="white", font=("Arial", 8))
                 character_images[name] = {
                     'bw_image': load_image_cached(bw_image_path, image_cache, size=(40, 40)),
                     'color_image': load_image_cached(original_image_path, image_cache, size=(40, 40)),
@@ -296,7 +296,7 @@ def setup_characters_canvas(root, characters, image_cache, app):
                 characters_canvas.images.append(image)
 
     add_characters_to_canvas(first_row_characters, start_x, y)
-    add_characters_to_canvas(second_row_characters, start_x, y + 110)
+    add_characters_to_canvas(second_row_characters, start_x, y + 100)
 
     app.character_images = character_images
     return characters_canvas, character_images
@@ -326,7 +326,7 @@ def load_image_cached(path, image_cache, size=(40, 40)):
         logging.error(f"Error loading image at {path}: {e}")
         return None
 
-def load_image_with_size(path, image_cache, size=(30, 30)):
+def load_image_with_size(path, image_cache, size=(40, 40)):
     try:
         cache_key = (str(path), size)
         if cache_key in image_cache:
@@ -350,7 +350,7 @@ def on_mousewheel(event, canvas):
 def update_character_image(canvas, app, name, new_image_path):
     character_info = app.character_images.get(name)
     if character_info:
-        new_image = load_image_cached(new_image_path, app.image_cache, size=(40,40))
+        new_image = load_image_cached(new_image_path, app.image_cache, size=(50,50))
         canvas.itemconfig(character_info['position'], image=new_image)
         character_info['current_image'] = new_image
         if not hasattr(canvas, 'images'):
@@ -361,8 +361,13 @@ def update_character_image(canvas, app, name, new_image_path):
 def determine_location_color(location, inventory, scenario_items, location_logic):
     if location in ALWAYS_ACCESSIBLE_LOCATIONS:
         return COLORS['accessible']
-    elif location in CITIES:
-        return COLORS['city']
+    elif location in CITIES: # Hier findet die Änderung statt!
+        access_status = check_access(location, inventory, scenario_items, location_logic)
+        # Überprüfe, ob die Stadt Anforderungen hat und ob diese NICHT erfüllt sind
+        if location_logic.get(location, {}).get('access_rules') and access_status != 'accessible':
+            return COLORS['not_accessible'] # Rot, wenn Anforderungen nicht erfüllt
+        else:
+            return COLORS['city'] # Gelb, wenn keine Anforderungen oder Anforderungen erfüllt
     else:
         access_status = check_access(location, inventory, scenario_items, location_logic)
         return COLORS[access_status]

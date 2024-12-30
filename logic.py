@@ -49,18 +49,20 @@ class LocationLogic:
 
     def mark_location(self, location, accessible):
         """
-        Marks a location on the canvas as accessible or not accessible.
-        
-        :param location: The name of the location to update.
-        :param accessible: Boolean indicating whether the location is accessible.
+        Marks a location on the canvas as accessible or not accessible, excluding "cleared" locations.
         """
         dot = self.location_labels.get(location)
-        
+
         if dot:
+            current_color = self.canvas.itemcget(dot, "fill") #Aktuelle Farbe abrufen
+
+            if current_color == COLORS['cleared']: #Wenn die Location bereits cleared ist, nichts machen
+                return
+
             if location in ALWAYS_ACCESSIBLE_LOCATIONS:
                 dot_color = COLORS['accessible']
             elif location in CITIES:
-                dot_color = COLORS['city']
+                dot_color = COLORS['city'] if accessible else COLORS['not_accessible']
             else:
                 dot_color = COLORS['accessible'] if accessible else COLORS['not_accessible']
 

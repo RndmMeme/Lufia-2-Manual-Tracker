@@ -32,9 +32,9 @@ LOCATION_STATES = {
 
 ALWAYS_ACCESSIBLE_LOCATIONS = {
     'Foomy Woods',
-    'Mountain of No Return',
+    'M. No Return',
     'Shaia Lab',
-    'Capsule Monster Shrine',
+    'Darbi Shrine',
     'Cave to Sundletan'
 }
 STATE_ORDER = ["not_accessible", "partly_accessible", "fully_accessible", "cleared"]
@@ -146,7 +146,6 @@ scenario_items_bw = load_json_cached(DATA_DIR / "scenario_items_bw.json")
 tool_items_c = load_json_cached(DATA_DIR / "tool_items.json")
 scenario_items_c = load_json_cached(DATA_DIR / "scenario_items.json")
 item_spells = load_json_cached(DATA_DIR / "items_spells.json")
-shop_addresses = load_json_cached(DATA_DIR / "shop_addresses.json")
 map_address = os.path.join(IMAGES_DIR / "map", "map.jpg")
 
 # Resolve paths for character images
