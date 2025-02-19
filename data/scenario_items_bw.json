@@ -1,83 +1,83 @@
 {
-    "Basement key": {
+    "Basement": {
         
         "image_path":  "scenario_items/Basement keybw.png",
 	"obtained_value": ""
     },
-    "Cloud key": {
+    "Cloud": {
         
         "image_path":  "scenario_items/Cloud keybw.png",
 	"obtained_value": ""
     },
-    "Dankirk key": {
+    "Dankirk": {
         
         "image_path":  "scenario_items/Dankirk keybw.png",
 	"obtained_value": ""
     },
-    "Flower key": {
+    "Flower": {
         
         "image_path":  "scenario_items/Flower keybw.png",
 	"obtained_value": ""
     },
-    "Ghost key": {
+    "Ghost": {
         
         "image_path":  "scenario_items/Ghost keybw.png",
 	"obtained_value": ""
     },
-    "Heart key": {
+    "Heart": {
         
         "image_path":  "scenario_items/Heart keybw.png",
 	"obtained_value": "" 
     },
-    "Lake key": {
+    "Lake": {
         
         "image_path":  "scenario_items/Lake keybw.png",
 	"obtained_value": "" 
     },
-    "Light key": {
+    "Light": {
         
         "image_path":  "scenario_items/Light keybw.png",
 	"obtained_value": "" 
     },
-    "Magma key": {
+    "Magma": {
         
         "image_path":  "scenario_items/Magma keybw.png",
 	"obtained_value": "" 
     },
-    "Narcysus key": {
+    "Narcysus": {
         
         "image_path":  "scenario_items/Narcysus keybw.png",
 	"obtained_value": "" 
     },
-    "Ruby key": {
+    "Ruby": {
         
         "image_path":  "scenario_items/Ruby keybw.png",
 	"obtained_value": "" 
     },
-    "Sky key": {
+    "Sky": {
         "image_path":  "scenario_items/Sky keybw.png",
 	"obtained_value": "" 
     },
-    "Sword key": {
+    "Sword": {
         
         "image_path":  "scenario_items/Sword keybw.png",
 	"obtained_value": "" 
     },
-    "Tree key": {
+    "Tree": {
         "image_path":  "scenario_items/Tree keybw.png",
 	"obtained_value": "" 
     },
-    "Trial key": {
+    "Trial": {
         
         "image_path":  "scenario_items/Trial keybw.png",
 	"obtained_value": "" 
     },
-    "Truth key": {
+    "Truth": {
         
         "image_path":  "scenario_items/Truth keybw.png",
 	"obtained_value": "" 
     },
-    "Wind key": {
+    "Wind": {
         
         "image_path":  "scenario_items/Wind keybw.png",
 	"obtained_value": "" 

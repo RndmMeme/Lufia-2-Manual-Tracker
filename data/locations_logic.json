@@ -8,7 +8,7 @@
         
     },
     "Ancient Tower": {
-        "access_rules": ["Bomb,Hook,Cloud key","Hammer,Hook,Cloud key"]
+        "access_rules": ["Bomb,Hook,Cloud","Hammer,Hook,Cloud"]
         
     },
     "Cave Bridge": {
@@ -26,11 +26,11 @@
         "access_rules": ["Engine", "Jade"]
     },
     "Dankirk Dungeon": {
-        "access_rules": ["Bomb,Hook,Dankirk key"]
+        "access_rules": ["Bomb,Hook,Dankirk"]
         
     },
     "Divine Shrine": {
-        "access_rules": ["Heart key,Hook,Hammer"]
+        "access_rules": ["Heart,Hook,Hammer"]
         
     },
     "Daos' Shrine": {
@@ -38,7 +38,7 @@
         
     },
     "Dragon Mountain": {
-        "access_rules": ["Magma key,Hook,Hammer,Fire,Engine","Magma key,Hook,Hammer,Fire,Jade"]
+        "access_rules": ["Magma,Hook,Hammer,Fire,Engine","Magma,Hook,Hammer,Fire,Jade"]
         
     },
     "Submarine Shrine":{
@@ -50,7 +50,7 @@
         
     },
     "Flower Mountain": {
-        "access_rules": ["Hammer,Flower key"]
+        "access_rules": ["Hammer,Flower"]
         
     },
     "Foomy Woods": {
@@ -58,11 +58,11 @@
         
     },
     "Gordovan Tower": {
-        "access_rules": ["Bomb,Hook,Wind key"]
+        "access_rules": ["Bomb,Hook,Wind"]
         
     },
     "Gratze Castle": {
-        "access_rules": ["Basement key,Engine,Arrow","Basement key,Engine,Fire","Basement key,Engine,Hook","Basement key,Jade,Arrow","Basement key,Jade,Fire","Basement key,Jade,Hook","Bomb,Hook,Dankirk key,Basement key"]
+        "access_rules": ["Basement,Engine,Arrow","Basement,Engine,Fire","Basement,Engine,Hook","Basement,Jade,Arrow","Basement,Jade,Fire","Basement,Jade,Hook","Bomb,Hook,Dankirk,Basement"]
         
     },
     "Karmirno Tower": {
@@ -74,7 +74,7 @@
         
     },
     "Lake Cave": {
-        "access_rules": ["Lake key,Arrow","Lake key,Fire","Lake key,Hook"]
+        "access_rules": ["Lake,Arrow","Lake,Fire","Lake,Hook"]
         
     },
     "Shaia Lab": {
@@ -97,15 +97,15 @@
         
     },
     "Lighthouse": {
-        "access_rules": ["Light key"]
+        "access_rules": ["Light"]
         
     },
     "Ferim Tower": {
-        "access_rules": ["Hook,Hammer,Trial key"]
+        "access_rules": ["Hook,Hammer,Trial"]
         
     },
     "Phantom Mountain": {
-        "access_rules": ["Bomb,Hook,Fire,Tree key"]
+        "access_rules": ["Bomb,Hook,Fire,Tree"]
         
     },
     "Preamarl": {
@@ -116,11 +116,11 @@
         
     },
     "Ruby Cave": {
-        "access_rules": ["Ruby key"]
+        "access_rules": ["Ruby"]
         
     },
     "Shrine of Vengeance": {
-        "access_rules": ["Ghost key,Jade,Bomb,Hammer"]
+        "access_rules": ["Ghost,Jade,Bomb,Hammer"]
         
     },
     "Shuman Tower": {
@@ -144,23 +144,23 @@
         
     },
     "Tanbel Tower": {
-        "access_rules": ["Sky key"]
+        "access_rules": ["Sky"]
         
     },
     "Tower of Sacrifice": {
-        "access_rules": ["Narcysus key,Hook,Bomb"]
+        "access_rules": ["Narcysus,Hook,Bomb"]
         
     },
     "Sacrifice Capsule": {
-        "access_rules": ["Narcysus key,Hook,Bomb","Narcysus key,Hook,Hammer"]
+        "access_rules": ["Narcysus,Hook,Bomb","Narcysus,Hook,Hammer"]
         
     },
     "Tower of Truth": {
-        "access_rules": ["Truth key,Hook,Bomb","Truth key,Hook,Hammer"]
+        "access_rules": ["Truth,Hook,Bomb","Truth,Hook,Hammer"]
         
     },
     "Treasure Sword Shrine": {
-        "access_rules": ["Sword key,Bomb"]
+        "access_rules": ["Sword,Bomb"]
         
     }
     

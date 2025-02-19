@@ -3,107 +3,107 @@
    
         "obtained_value": "0000 0000 0000 0000 0000 0010"
     },
-    "Shrine key": {
+    "Shrine": {
 
         "obtained_value": "0000 0000 0000 0000 0000 0100"
     },
-    "Basement key": {
+    "Basement": {
         
         "obtained_value": "0000 0010 0000 0000 0000 0000",
         "image_path":  "scenario_items/Basement key.png"
 	
     },
-    "Cloud key": {
+    "Cloud": {
         
         "obtained_value": "0000 0000 0000 0000 1000 0000",
         "image_path":  "scenario_items/Cloud key.png"
 	
     },
-    "Dankirk key": {
+    "Dankirk": {
         
         "obtained_value": "0000 0001 0000 0000 0000 0000",
         "image_path":  "scenario_items/Dankirk key.png"
 	
     },
-    "Flower key": {
+    "Flower": {
         
         "obtained_value": "0000 0000 0000 1000 0000 0000",
         "image_path":  "scenario_items/Flower key.png"
 	
     },
-    "Ghost key": {
+    "Ghost": {
         
         "obtained_value": "0000 0000 0100 0000 0000 0000",
         "image_path":  "scenario_items/Ghost key.png"
 	
     },
-    "Heart key": {
+    "Heart": {
         
         "obtained_value": "0000 0000 0010 0000 0000 0000",
         "image_path":  "scenario_items/Heart key.png"
 	
     },
-    "Lake key": {
+    "Lake": {
         
         "obtained_value": "0000 0000 0000 0000 0001 0000",
         "image_path":  "scenario_items/Lake key.png"
 	
     },
-    "Light key": {
+    "Light": {
         
         "obtained_value": "0000 0000 0000 0001 0000 0000",
         "image_path":  "scenario_items/Light key.png"
 	
     },
-    "Magma key": {
+    "Magma": {
         
         "obtained_value": "0000 0000 0001 0000 0000 0000",
         "image_path":  "scenario_items/Magma key.png"
 	
     },
-    "Narcysus key": {
+    "Narcysus": {
         
         "obtained_value": "0000 0100 0000 0000 0000 0000",
         "image_path":  "scenario_items/Narcysus key.png"
 	
     },
-    "Ruby key": {
+    "Ruby": {
         
         "obtained_value": "0000 0000 0000 0000 0010 0000",
         "image_path":  "scenario_items/Ruby key.png"
 	
     },
-    "Sky key": {
+    "Sky": {
         
         "obtained_value": "0000 0000 0000 0000 0000 1000",
         "image_path":  "scenario_items/Sky key.png"
 	
     },
-    "Sword key": {
+    "Sword": {
         
         "obtained_value": "0000 0000 0000 0010 0000 0000",
         "image_path":  "scenario_items/Sword key.png"
 	
     },
-    "Tree key": {
+    "Tree": {
         
         "obtained_value": "0000 0000 0000 0100 0000 0000",
         "image_path":  "scenario_items/Tree key.png"
 	
     },
-    "Trial key": {
+    "Trial": {
         
         "obtained_value": "0000 0000 1000 0000 0000 0000",
         "image_path":  "scenario_items/Trial key.png"
 	
     },
-    "Truth key": {
+    "Truth": {
         
         "obtained_value": "0000 1000 0000 0000 0000 0000",
         "image_path":  "scenario_items/Truth key.png"
 	
     },
-    "Wind key": {
+    "Wind": {
         
         "obtained_value": "0000 0000 0000 0000 0100 0000",
         "image_path":  "scenario_items/Wind key.png"
