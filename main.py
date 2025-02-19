@@ -7,18 +7,23 @@ from pathlib import Path
 import logging
 import json
 from helpers.file_loader import load_image
-from gui_setup import setup_interface, setup_canvases, load_items_and_cache
+from helpers.item_management import load_items_and_cache
+from gui_setup import setup_interface, setup_canvases
 from shared import LOCATIONS, LOCATION_LOGIC, CITIES, tool_items_bw, scenario_items_bw, item_to_location, characters_bw, ALWAYS_ACCESSIBLE_LOCATIONS, load_json_cached, generate_item_to_location_mapping, resolve_relative_path, BASE_DIR, IMAGES_DIR, DATA_DIR, item_spells
 from canvas_config import update_character_image, map_address, setup_tools_canvas, setup_scenario_canvas, setup_characters_canvas, setup_maidens_canvas, setup_item_canvas, setup_hints_canvas
 from event_handlers import handle_maiden_click, handle_tool_click, handle_scenario_click, handle_dot_click
 from logic import LocationLogic
-
+from helpers.resalo import Save, Load, Reset
 
 
 # Ensure the directory exists
 log_dir = "logs"
 if not os.path.exists(log_dir):
     os.makedirs(log_dir)
+    
+save_dir = "saves"
+if not os.path.exists(save_dir):
+    os.makedirs(save_dir)
 
 # Configure logging
 logging.basicConfig(
@@ -48,6 +53,10 @@ class Lufia2TrackerApp:
         # Initialize essential attributes
         self.map_address = os.path.join(IMAGES_DIR / "map", "map.jpg")
         self.LOCATIONS = LOCATIONS
+        
+        
+        self.game_state = {}
+        self.manually_updated_locations = {}
         
         self.location_character_images = {}
         self.item_spells = item_spells
@@ -100,9 +109,6 @@ class Lufia2TrackerApp:
         self.maidens_canvas, self.maiden_images = setup_maidens_canvas(root, self.characters, characters_bw, self.image_cache, self, handle_maiden_click)
         
 
-        # Populate initial canvases with black and white images
-        self.populate_initial_canvases()
-
         # Initialize location logic AFTER canvases are set up
         if self.canvas is not None and self.location_labels and self.maidens_images: # Check if all data is available
             self.location_logic = LocationLogic(self.script_dir, self.location_labels, self.canvas, self.maidens_images)
@@ -148,8 +154,6 @@ class Lufia2TrackerApp:
     def setup_canvases(self):
         setup_canvases(self)
 
-    
-    
     def on_tool_click(self, tool_name):
         handle_tool_click(self, tool_name)
 
@@ -157,8 +161,7 @@ class Lufia2TrackerApp:
         handle_scenario_click(self, scenario_name)
         
     def on_maiden_click(self, maiden_name):
-        handle_maiden_click(self, maiden_name)
-        
+        handle_maiden_click(self, maiden_name)   
 
     def on_dot_click(self, location):
         dot = self.location_labels.get(location)
@@ -176,30 +179,23 @@ class Lufia2TrackerApp:
 
     def handle_manual_input(self):
         self.manual_input_active = True
+
         
-
-    def populate_initial_canvases(self):
-        for tool_name, tool_info in self.tool_images.items():
-            image_path = tool_items_bw[tool_name]["image_path"]
-            new_image = self.load_image_cached(image_path)
-            if new_image:
-                position = tool_info['position']
-                self.tools_canvas.itemconfig(position, image=new_image)
-                tool_info['image'] = new_image
-
-        for scenario_name, scenario_info in self.scenario_images.items():
-            image_path = scenario_items_bw[scenario_name]["image_path"]
-            new_image = self.load_image_cached(image_path)
-            if new_image:
-                position = scenario_info['position']
-                self.scenario_canvas.itemconfig(position, image=new_image)
-                scenario_info['image'] = new_image
-
-    def load_image_cached(self, image_path):
+    def load_image_cached(self, image_path, size=None):
         if image_path not in self.image_cache:
             new_image = load_image(image_path)
             self.image_cache[image_path] = new_image
         return self.image_cache[image_path]
+    
+    def reset(self):
+        self.reset_handler.reset_game_state()
+
+    def save(self):
+        self.save_handler.save_game_state()
+        
+    def load(self):
+        self.load_handler.load_game_state()
+        
 
     def on_resize(self, event):
         pass
@@ -214,6 +210,9 @@ if __name__ == "__main__":
     try:
         app = Lufia2TrackerApp(root)
         root.mainloop()
+        app.reset()
+        app.load()
+        app.save()
     except Exception as e:
         logging.error(f"Unhandled exception: {e}")
         with open("error_log.txt", "a") as error_file:

@@ -1,0 +1,33 @@
+"Item / search" related changes / improvements:
+
+- moved the item / spells related search functions and window creations into their own module item_management.py
+- removed cascade in item / spells context menu to straight search
+- removed highlight in items/spells box
+- extended highlight duration when item entry looked up in search already exists
+- changed Color from "x" in items / spells box from red to White
+- when mouseover over "x" highlight row in red for the Duration of the mouseover
+- display matches in item search
+- mark item with mousewheel or arrows (even if mouse pointer is outside the suggestions window)
+- confirm marked item with mousebutton 2 (mouse Wheel click) (even if mouse pointer is outside the suggestions window)
+- forced search window priority (grab_set)
+- close search with esc
+- added Buttons for Weapon, Armor, Iris Treasure, Spells into active search window for faster Access
+
+added Features:
+
+- added Reset functionality
+- added Save functionality
+- added Load functionality
+
+Misc changes:
+
+- updated "About" and "Help"
+- when assigning a character to a location the color automatically changes to cleared (grey)
+- increased font size for better readability
+
+
+Known issues:
+
+- in item search the marking defaults to the center item despite matching
+
+

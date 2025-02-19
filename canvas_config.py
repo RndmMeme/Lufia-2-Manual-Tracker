@@ -2,7 +2,7 @@
 import tkinter as tk
 from PIL import Image, ImageTk
 import os
-from shared import  tool_items_bw, scenario_items_bw, CITIES, IMAGES_DIR, ALWAYS_ACCESSIBLE_LOCATIONS, COLORS, characters, characters_bw
+from shared import tool_items_c, tool_items_bw, scenario_items_bw, CITIES, IMAGES_DIR, ALWAYS_ACCESSIBLE_LOCATIONS, COLORS, characters, characters_bw
 from helpers.file_loader import load_image
 from logic import LocationLogic
 import logging
@@ -27,7 +27,7 @@ map_address = os.path.join(IMAGES_DIR, "map", "map.jpg")
 def setup_item_canvas(root):
     item_canvas = tk.Canvas(root, bg='black', width=301, height=284)
     item_canvas.place(x=1, y=1, width=301, height=284)
-    item_canvas.create_text(10, 10, anchor="w", text="Items / Spells:", fill="white", font=("Arial", 10))
+    item_canvas.create_text(10, 10, anchor="w", text="Items / Spells:", fill="white", font=("Arial", 13), tags=("item_canvas_label",))
     
     # Configure the canvas scroll region
     item_canvas.configure(scrollregion=item_canvas.bbox("all"))
@@ -46,12 +46,12 @@ def setup_tools_canvas(root, tools_keys, tool_click_callback, image_cache):
     tool_images = {}
     for i, key in enumerate(tools_keys):
         image_path = tool_items_bw[key]["image_path"]
-        image = load_image_cached(image_path, image_cache)
+        image = load_image_cached(image_path, image_cache, size=(40, 40))
         if image:
-            x = 10 + i *40
+            x = 5 + i *40
             y = 5
             image_id = tools_canvas.create_image(x, y, anchor="nw", image=image)
-            tools_canvas.create_text(x + 13, y + 32, anchor="n", text=key, fill="white", font=("Arial", 8))
+            tools_canvas.create_text(x + 18, y + 32, anchor="n", text=key, fill="white", font=("Arial", 8))
             tool_images[key] = {'image': image, 'position': image_id}
             tools_canvas.tag_bind(image_id, "<Button-1>", lambda event, tool=key: tool_click_callback(tool))
             tools_canvas.images.append(image)
@@ -88,7 +88,7 @@ def setup_maidens_canvas(root, characters, characters_bw, image_cache, app, on_m
                 if image:
                     x = start_x + i * 40
                     image_id = maidens_canvas.create_image(x, y, anchor="nw", image=image)
-                    maidens_canvas.create_text(x + 20, y + 40, anchor="n", text=name, fill="white", font=("Arial", 8))
+                    maidens_canvas.create_text(x + 20, y + 40, anchor="n", text=name, fill="white", font=("Arial", 9))
                     maiden_images[name] = {
                         'bw_image': load_image_cached(bw_image_path, image_cache, size=(40, 40)) if bw_image_path else None,
                         'color_image': load_image_cached(original_image_path, image_cache, size=(40, 40)),
@@ -110,31 +110,18 @@ def setup_maidens_canvas(root, characters, characters_bw, image_cache, app, on_m
     return maidens_canvas, maiden_images
 
 def setup_hints_canvas(root):
-    # Create the Text widget
-    hints_canvas = tk.Text(root, bg='black', fg='white', width=298, height=500, wrap='word', insertbackground='white')
-    hints_canvas.place(x=3, y=285, width=298, height=500)
-    
-    # Configure the Text widget to have a specific font
-    hints_canvas.configure(font=("Helvetica", 10))
+    hints_label = tk.Label(root, anchor="w", bg='black', fg='white', font=("Arial", 13), text="Hints:")
+    hints_label.place(x=3, y=285, width=298)  # Positioniere das Label
 
-    # Add static text as a label at the beginning
-    hints_canvas.insert(tk.END, "Hints:\n")
-    
-    # Make the "Hints:" text non-editable
-    hints_canvas.tag_add("static", "1.0", "1.end")
-    hints_canvas.tag_configure("static", foreground="white", background="black")
-    hints_canvas.configure(state='normal')  # Set the Text widget to editable state
-    
-    # Ensure that the "Hints:" text remains non-editable
-    hints_canvas.bind("<Key>", lambda e: 'break' if hints_canvas.index(tk.INSERT).startswith("1.") else None)
+    hints_text = tk.Text(root, bg='black', fg='white', width=298, height=485, wrap='word', insertbackground='white')  # Höhe angepasst
+    hints_text.place(x=3, y=305, width=298, height=481)  # Positioniere das Text-Widget unter dem Label
 
-    # Set focus to the Text widget to display the cursor
-    hints_canvas.focus()
-    
-    #Bind mouse wheel events to the canvas
-    hints_canvas.bind_all("<MouseWheel>", lambda event: on_mousewheel(event, hints_canvas))
-    
-    return hints_canvas
+    hints_text.configure(font=("Helvetica", 12))
+    hints_text.focus()
+
+    hints_text.bind_all("<MouseWheel>", lambda event: on_mousewheel(event, hints_text))
+
+    return hints_text  # Gib das Text-Widget zurück
 
 def setup_canvas(root, map_address, locations, location_logic, inventory, scenario_items, dot_click_callback, right_click_callback=None, manual_input_active=False):  
     try:
@@ -159,7 +146,7 @@ def setup_canvas(root, map_address, locations, location_logic, inventory, scenar
         location_labels = {}
         tooltips = {}
         
-        city_limit = 29
+        city_limit = 28
         locations_list = list(locations.items())
 
         for index, (location, coords) in enumerate(locations_list):
@@ -207,9 +194,9 @@ def setup_scenario_canvas(root, scenario_keys, item_to_location, scenario_click_
     # Constants for grid layout
     columns = 6  # Number per row
     spacing_x = 65  # Horizontal spacing between items
-    spacing_y = 50  # Vertical spacing between items
+    spacing_y = 45  # Vertical spacing between items
     start_x = 30  # Starting X position
-    start_y = 5  # Starting Y position
+    start_y = 2  # Starting Y position
 
     # Calculate total number of rows needed
     total_rows = (len(scenario_keys) + columns - 1) // columns
@@ -218,7 +205,7 @@ def setup_scenario_canvas(root, scenario_keys, item_to_location, scenario_click_
         item_info = scenario_items_bw[key]
         image_path = item_info["image_path"]
         
-        image = load_image_with_size(image_path, image_cache, size=(40, 40))
+        image = load_image_cached(image_path, image_cache, size=(40, 40))
 
         if image:
             col = i % columns  # Column position
@@ -234,8 +221,8 @@ def setup_scenario_canvas(root, scenario_keys, item_to_location, scenario_click_
             y = start_y + row * spacing_y
             image_id = scenario_canvas.create_image(x, y, anchor="nw", image=image)
                 
-            text_y = y + 35  # Place the text below the image
-            scenario_canvas.create_text(x + 15, text_y, anchor='center', text=key, fill="white", font=("Arial", 8))
+            text_y = y + 45  # Place the text below the image
+            scenario_canvas.create_text(x + 15, text_y, anchor='center', text=key, fill="white", font=("Arial", 10))
             scenario_images[key] = {'image': image, 'position': image_id}
             
             # Debug message added here
@@ -283,7 +270,7 @@ def setup_characters_canvas(root, characters, image_cache, app):
             if image:
                 x = start_x + i * 56
                 image_id = characters_canvas.create_image(x, y, anchor="nw", image=image)
-                characters_canvas.create_text(x + 20, y + 40, anchor="n", text=name, fill="white", font=("Arial", 8))
+                characters_canvas.create_text(x + 20, y + 40, anchor="n", text=name, fill="white", font=("Arial", 10))
                 character_images[name] = {
                     'bw_image': load_image_cached(bw_image_path, image_cache, size=(40, 40)),
                     'color_image': load_image_cached(original_image_path, image_cache, size=(40, 40)),
@@ -305,13 +292,13 @@ def setup_characters_canvas(root, characters, image_cache, app):
 def load_image(path):
     try:
         image = Image.open(path)
-        image = image.resize((40, 40), Image.Resampling.LANCZOS)
+        image = image.resize((30, 30), Image.Resampling.LANCZOS)
         return ImageTk.PhotoImage(image)
     except Exception as e:
         logging.error(f"Error loading image at {path}: {e}")
         return None
     
-def load_image_cached(path, image_cache, size=(40, 40)):
+def load_image_cached(path, image_cache, size=None):
     cache_key = (str(path), size)
     if cache_key in image_cache:
         return image_cache[cache_key]
@@ -326,20 +313,7 @@ def load_image_cached(path, image_cache, size=(40, 40)):
         logging.error(f"Error loading image at {path}: {e}")
         return None
 
-def load_image_with_size(path, image_cache, size=(40, 40)):
-    try:
-        cache_key = (str(path), size)
-        if cache_key in image_cache:
-            return image_cache[cache_key]
 
-        image = Image.open(path)
-        image = image.resize(size, Image.Resampling.LANCZOS)
-        photo_image = ImageTk.PhotoImage(image)
-        image_cache[cache_key] = photo_image  # Cache the loaded and resized image
-        return photo_image
-    except Exception as e:
-        logging.error(f"Error loading image at {path}: {e}")
-        return None
         
 def on_mousewheel(event, canvas):
     # Determine the direction of the scroll
@@ -348,9 +322,10 @@ def on_mousewheel(event, canvas):
 
 
 def update_character_image(canvas, app, name, new_image_path):
+    print(f"Updating character: {name} with image: {new_image_path}")
     character_info = app.character_images.get(name)
     if character_info:
-        new_image = load_image_cached(new_image_path, app.image_cache, size=(50,50))
+        new_image = load_image_cached(new_image_path, app.image_cache, size=(40,40))
         canvas.itemconfig(character_info['position'], image=new_image)
         character_info['current_image'] = new_image
         if not hasattr(canvas, 'images'):
@@ -391,7 +366,7 @@ def check_access(location, inventory, scenario_items, location_logic):
         items = rule.split(',')
         if all(item in inventory or item in scenario_items for item in items):
             return 'accessible'
-    return 'partly_accessible' if any(item in inventory or item in scenario_items for rule in rules for item in rule.split(',')) else 'not_accessible'
+    return 'partially_accessible' if any(item in inventory or item in scenario_items for rule in rules for item in rule.split(',')) else 'not_accessible'
 
 
 def toggle_maiden_image(canvas, maiden_images, name, app):
@@ -415,6 +390,8 @@ def toggle_maiden_image(canvas, maiden_images, name, app):
         app.on_maiden_click(name)
     else:
         logging.error(f"Keine Maiden Info gefunden für: {name}")
+    print(f"Maiden was clicked: {name}, is colored: {maiden_info['is_colored']}")
+    
 
 def toggle_character_image(characters_canvas, character_images, name, app):
     character_info = character_images.get(name)
@@ -427,7 +404,8 @@ def toggle_character_image(characters_canvas, character_images, name, app):
         if not hasattr(characters_canvas, 'images'):
             characters_canvas.images = []
         characters_canvas.images.append(new_image)
-        
+    print(f"Character was clicked: {name}, is colored: {character_info['is_colored']}")
+    
 
 class ToolTip:
     def __init__(self, widget):

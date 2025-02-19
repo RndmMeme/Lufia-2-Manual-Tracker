@@ -14,7 +14,7 @@ DATA_DIR = BASE_DIR / "data"
 
 json_cache = {}
 
-# Accessible colors
+
 COLORS = {
     'accessible': 'lightgreen',
     'partly_accessible': 'orange',
@@ -32,7 +32,7 @@ LOCATION_STATES = {
 
 ALWAYS_ACCESSIBLE_LOCATIONS = {
     'Foomy Woods',
-    'M. No Return',
+    'Mountain No Return',
     'Shaia Lab',
     'Darbi Shrine',
     'Cave to Sundletan'
