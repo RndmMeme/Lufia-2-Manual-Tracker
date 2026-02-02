@@ -1,0 +1,196 @@
+from PyQt6.QtWidgets import QMenuBar, QMenu, QWidget, QHBoxLayout, QCheckBox, QLabel, QFrame
+from PyQt6.QtGui import QAction
+from PyQt6.QtCore import pyqtSignal, Qt
+from .help_dialogs import HelpDialog, AboutDialog
+
+class MenuRibbon(QWidget):
+    """
+    Replicates the v1.3 Menu Ribbon.
+    Wraps a QMenuBar and a Custom Panel in a QHBoxLayout to control positioning.
+    """
+    # Signals
+    reset_requested = pyqtSignal()
+    save_requested = pyqtSignal()
+    load_requested = pyqtSignal()
+    
+    sync_requested = pyqtSignal(str) # "all", "tools", "keys", etc.
+    auto_toggled = pyqtSignal(bool) # True=Show Checkboxes/Start, False=Hide/Stop
+    player_color_requested = pyqtSignal()
+    font_adj_toggled = pyqtSignal(bool)
+    header_color_requested = pyqtSignal()
+    
+    # Edit Layout Signal
+    edit_layout_toggled = pyqtSignal(bool)
+    
+    # Checkbox signals (state changes)
+    auto_options_changed = pyqtSignal(dict) # {chars: bool, tools: bool...}
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        
+        # Main Layout
+        layout = QHBoxLayout()
+        layout.setContentsMargins(0, 0, 0, 0)
+        layout.setSpacing(10)
+        self.setLayout(layout)
+        
+        # --- Internal Menu Bar ---
+        self.menu_bar = QMenuBar()
+        self.menu_bar.setStyleSheet("""
+            QMenuBar {
+                background-color: #2b2b2b;
+                color: #ffffff;
+                border: none;
+            }
+            QMenuBar::item {
+                background-color: transparent;
+                padding: 4px 10px;
+                margin: 2px;
+            }
+            QMenuBar::item:selected {
+                background-color: #3d3d3d;
+            }
+            QMenu {
+                background-color: #2b2b2b;
+                color: #ffffff;
+                border: 1px solid #3d3d3d;
+            }
+            QMenu::item:selected {
+                background-color: #3d3d3d;
+            }
+        """)
+        # We need to ensure the menu bar doesn't expand infinitely if we want stuff next to it.
+        self.menu_bar.setSizePolicy(self.menu_bar.sizePolicy().horizontalPolicy(), self.menu_bar.sizePolicy().verticalPolicy())
+        layout.addWidget(self.menu_bar)
+
+        # ... (Options and Tracker Menus - Unchanged) ...
+        # --- Options (Left) ---
+        options_menu = self.menu_bar.addMenu("Options")
+        options_menu.addAction("Reset", self.reset_requested.emit)
+        options_menu.addAction("Save", self.save_requested.emit)
+        options_menu.addAction("Load", self.load_requested.emit)
+        
+        options_menu.addSeparator()
+        self.font_adj_action = QAction("Show Font Adj", self)
+        self.font_adj_action.setCheckable(True)
+        self.font_adj_action.toggled.connect(self.font_adj_toggled.emit)
+        self.font_adj_action.toggled.connect(self.font_adj_toggled.emit)
+        options_menu.addAction(self.font_adj_action)
+        
+        self.edit_layout_action = QAction("Edit Layout", self)
+        self.edit_layout_action.setCheckable(True)
+        self.edit_layout_action.toggled.connect(self.edit_layout_toggled.emit)
+        options_menu.addAction(self.edit_layout_action)
+        
+        options_menu.addAction("Header Color", self.header_color_requested.emit)
+
+        # --- Tracker (Left) ---
+        tracker_menu = self.menu_bar.addMenu("Tracker")
+        
+        # Sync Submenu
+        sync_menu = QMenu("Sync", self)
+        sync_menu.addAction("All", lambda: self.sync_requested.emit("all"))
+        sync_menu.addSeparator()
+        sync_menu.addAction("Tools", lambda: self.sync_requested.emit("tools"))
+        sync_menu.addAction("Keys", lambda: self.sync_requested.emit("keys"))
+        sync_menu.addAction("Chars", lambda: self.sync_requested.emit("chars"))
+        sync_menu.addAction("Maiden", lambda: self.sync_requested.emit("maidens"))
+        sync_menu.addAction("Pos", lambda: self.sync_requested.emit("pos"))
+        tracker_menu.addMenu(sync_menu)
+        
+        # Auto Action
+        self.auto_active = False
+        self.auto_action = QAction("Auto", self)
+        self.auto_action.triggered.connect(self._toggle_auto)
+        tracker_menu.addAction(self.auto_action)
+        
+        tracker_menu.addAction("Player Color", self.player_color_requested.emit)
+        
+        # --- Help / About (Right of Tracker) ---
+        about_action = self.menu_bar.addAction("About")
+        about_action.triggered.connect(self._show_about)
+        
+        help_action = self.menu_bar.addAction("Help") 
+        help_action.triggered.connect(self._show_help)
+        
+        # --- Auto Checkboxes Panel ---
+        self.checkbox_frame = QWidget()
+        self.cb_layout = QHBoxLayout()
+        self.cb_layout.setContentsMargins(10, 0, 0, 0)
+        self.cb_layout.setSpacing(10)
+        self.checkbox_frame.setLayout(self.cb_layout)
+        
+        self.lbl_auto = QLabel("Auto Tracking:")
+        self.lbl_auto.setStyleSheet("color: #aaa; font-size: 11px;")
+        self.cb_layout.addWidget(self.lbl_auto)
+        
+        self.checkboxes = {}
+        for key in ["All", "Chars", "Tools", "Keys", "Maidens", "Pos"]:
+            cb = QCheckBox(key)
+            # Enforce strict checkbox styling
+            cb.setStyleSheet("""
+                QCheckBox { color: #ddd; }
+                QCheckBox::indicator {
+                    width: 13px;
+                    height: 13px;
+                    border: 1px solid #888;
+                    background: #333;
+                }
+                QCheckBox::indicator:checked {
+                    background: #4CAF50;
+                    border: 1px solid #4CAF50;
+                    image: url(none); /* Remove default check image if we want plain color, or keep default */
+                }
+                QCheckBox::indicator:hover {
+                    border: 1px solid #aaa;
+                }
+            """)
+            cb.setChecked(False) 
+            cb.stateChanged.connect(self._on_checkbox_change)
+            self.checkboxes[key] = cb
+            self.cb_layout.addWidget(cb)
+            
+            if key == "All":
+                 cb.toggled.connect(self._on_all_toggled)
+
+        self.checkbox_frame.hide() 
+        layout.addWidget(self.checkbox_frame)
+        layout.addStretch()
+        
+        # Overall Styling
+        self.setStyleSheet("background-color: #2b2b2b;")
+
+    def _show_about(self):
+        dlg = AboutDialog(self)
+        dlg.exec()
+        
+    def _show_help(self):
+        dlg = HelpDialog(self)
+        dlg.exec()
+
+    def _toggle_auto(self):
+        self.auto_active = not self.auto_active
+        self.auto_toggled.emit(self.auto_active)
+        
+        if self.auto_active:
+            self.auto_action.setText("Auto (Active)")
+            self.checkbox_frame.show()
+            self.lbl_auto.setStyleSheet("color: lightgreen; font-weight: bold;")
+            # Default "All" to checked if first time?
+            if not self.checkboxes["All"].isChecked():
+                 self.checkboxes["All"].setChecked(True)
+        else:
+            self.auto_action.setText("Auto")
+            self.checkbox_frame.hide()
+
+    def _on_all_toggled(self, checked):
+        # Toggle all others
+        for k, cb in self.checkboxes.items():
+            if k != "All":
+                cb.setChecked(checked)
+
+    def _on_checkbox_change(self):
+        # Gather state
+        state = {k.lower(): cb.isChecked() for k, cb in self.checkboxes.items()}
+        self.auto_options_changed.emit(state)
+

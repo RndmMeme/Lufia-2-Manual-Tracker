@@ -1,0 +1,47 @@
+Lufia 2 Auto Tracker v1.4 - Changelog
+=======================================
+
+Core Changes
+------------
+*   **Framework Migration**: Ported entire application from Tkinter to PyQt6.
+*   **Architecture**: Refactored into a Domain-Driven Design:
+    *   `LogicEngine`: Handles accessibility rules and item requirements (decoupled from UI).
+    *   `StateManager`: Central source of truth for Inventory, Locations, and Characters.
+    *   `DataListener`: Background TCP listener for external auto-tracking data.
+
+UI Improvements
+---------------
+*   **Docking System**: implemented a flexible DockWidget system permitting users to rearrange panels.
+    *   Restored "T-Shape" layout default (Characters top, Map/Tools split bottom).
+    *   Added "Fluid" resizing policy allowing the Map to take priority when resizing.
+*   **Customization**:
+    *   **Header Colors**: Added Options menu to pick custom colors for Dock titles.
+    *   **Font Size control**: Added global font scaling buttons (+/-) to dock headers affecting all inner content.
+*   **Map Widget**:
+    *   Smooth scaling with QGraphicsView.
+    *   Context Menus on Right-Click (Item Search for Cities, Character Assign for Locations).
+*   **Inventory**:
+    *   Used `FlowLayout` for Tools/Keys to allow wrapping.
+    *   Reverted grayscale icons to low-opacity (15%) for better visibility.
+
+New Features
+------------
+*   **Auto-Tracking**: Integration for receiving game state via TCP (e.g. from USB2SNES helper).
+*   **Item Search Dialog**:
+    *   Standalone window (non-modal or modal options).
+    *   **City Picker**: Dropdown to quickly switch target shops.
+*   **Character Assignment**:
+    *   Logic to assign characters to locations (e.g. "Found Guy at Alunze").
+    *   Visual sprites appear on the map at the assigned location.
+*   **Persistence**: Full Save/Load State functionality using JSON.
+
+v1.4.1 Update - Free Placement & Polish
+---------------------------------------
+*   **Free Placement System**:
+    *   **Edit Layout Mode**: Enabled via Options > "Edit Layout". Allows simple drag-and-drop of ANY icon in Characters, Maidens, Tools, and Keys widgets.
+    *   **Layout Persistence**: Custom positions are saved automatically to `layout_config.json` and restored on launch.
+    *   **Scrollable Docks**: Characters widget now uses a ScrollArea, allowing it to be resized smaller than its content.
+*   **Auto-Tracking**:
+    *   **Granular Filters**: Added toggles in the "Auto" menu to enable/disable tracking for specific categories (Chars, Tools, Keys, Maidens, Position).
+*   **Map**:
+    *   **Player Color**: Added "Pick Player Color" option to customize the tracker arrow.
