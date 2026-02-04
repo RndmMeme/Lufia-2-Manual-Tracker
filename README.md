@@ -22,6 +22,8 @@ Ported from the Auto-Tracker codebase to provide advanced UI features for manual
 2. Install dependencies: `pip install -r requirements.txt` (PyQt6).
 3. Run `src/main.py`.
 
+4. Alternatively download the .exe and just start it.
+
 ## Usage
 - **Left-Click** map dots to cycle their state manually.
 - **Right-Click** map dots to assign characters or check shops.
