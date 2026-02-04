@@ -1,0 +1,21 @@
+v1.4 - 2026-02-04
+-------------------
+Major Update: Ported Advanced Features from Auto Tracker v1.4
+
+**Core Features**
+- **Docking System**: Panels (Items, Maps, Characters) can now be rearranged, floated, and resized.
+- **Custom Layout**: "Edit Layout" mode allows dragging individual widget icons to custom positions.
+- **Map Upgrades**: 
+    - Character Sprites can be assigned to map locations via right-click context menu.
+    - Added simplified "Pin" button to dock headers.
+- **Manual Controls**: 
+    - Character Widget supports 3-state toggle (Dim -> Found(50%) -> Active(100%)).
+    - Smart visual feedback: "Not Obtained" items are slightly more visible (Opacity 0.25/0.3).
+- **Appearance**: 
+    - Integrated refined "Fusion" Dark Theme from Auto Tracker logic.
+    - Cleaned up Menu Ribbon (Renamed "View" -> "Edit", Removed "Tracker").
+
+**Removed**
+- Removed all Auto-Tracking networking code (`network` module, socket listeners).
+- Removed "Tracker" specific help sections and menus.
+- Removed legacy "Player Color/Shape" options not relevant to manual tracking.

@@ -1,0 +1,24 @@
+{
+    "inventory_overrides": {
+        "Heart": false,
+        "Arrow": false,
+        "Bomb": false
+    },
+    "location_overrides": {
+        "Sacrifice Capsule": "cleared"
+    },
+    "character_locations": {
+        "Sacrifice Capsule": "Artea"
+    },
+    "inventory": {},
+    "locations": {},
+    "characters": {
+        "Maxim": false,
+        "Artea": true,
+        "Gusto": false
+    },
+    "active_party": [],
+    "obtained_capsules": [],
+    "shop_items": [],
+    "hints": ""
+}
