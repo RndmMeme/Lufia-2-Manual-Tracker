@@ -1,6 +1,6 @@
 # Lufia 2 Manual Tracker v1.4
 
-A feature-rich manual tracker for the "Lufia 2 Ancient Cave" Randomizer (terrorwave).
+A feature-rich manual tracker for the "Lufia 2" Randomizer (terrorwave).
 Ported from the Auto-Tracker codebase to provide advanced UI features for manual users.
 
 ## Features
