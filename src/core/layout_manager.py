@@ -11,6 +11,7 @@ class LayoutManager(QObject):
     def __init__(self):
         super().__init__()
         self.config_path = DATA_DIR / "layout_config.json"
+        self.default_config_path = DATA_DIR / "default_layout_config.json"
         self._layouts = {}
         self.load_layout()
 
@@ -33,6 +34,28 @@ class LayoutManager(QObject):
             logging.info("Layout config saved.")
         except Exception as e:
             logging.error(f"Failed to save layout config: {e}")
+
+    def save_custom_as_default(self):
+        try:
+            with open(self.default_config_path, 'w') as f:
+                json.dump(self._layouts, f, indent=4)
+            logging.info("Saved current layout as default.")
+        except Exception as e:
+            logging.error(f"Failed to save default layout config: {e}")
+
+    def reset_to_default(self):
+        if self.default_config_path.exists():
+            try:
+                with open(self.default_config_path, 'r') as f:
+                    self._layouts = json.load(f)
+                logging.info("Restored default layout config.")
+            except Exception as e:
+                logging.error(f"Failed to load default layout: {e}")
+                self._layouts = {}
+        else:
+            self._layouts = {}
+            logging.info("No default layout config found. Reset to empty.")
+        self.save_layout()
 
     def get_position(self, widget_id: str, item_name: str) -> tuple:
         """Returns (x, y) or None if not found."""

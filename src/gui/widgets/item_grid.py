@@ -148,7 +148,7 @@ class ItemGrid(QWidget):
                     col = 0
                     y += spacing_y
 
-            icon = DraggableItemIcon(name, full_path, size=icon_size, show_label=show_labels, parent=self)
+            icon = DraggableItemIcon(name, full_path, size=icon_size, show_label=self.show_labels, parent=self)
             icon.move(final_x, final_y)
             icon.show() # Explicitly show since not in layout
             
@@ -158,6 +158,31 @@ class ItemGrid(QWidget):
             self.icons[name] = icon
 
         # Set minimum size to encompass all items
+        self.update_min_size()
+
+    def update_positions(self):
+        x = 5
+        y = 5
+        col = 0
+        cols = 6
+        spacing_x = self.icon_size + 10 # 50
+        spacing_y = self.icon_size + 20 if self.show_labels else self.icon_size + 5
+        
+        for name, icon in self.icons.items():
+            pos = self.layout_manager.get_position(self.widget_id, name)
+            if pos:
+                final_x, final_y = pos
+            else:
+                final_x = x + (col * spacing_x)
+                final_y = y
+                
+                col += 1
+                if col >= cols:
+                    col = 0
+                    y += spacing_y
+                    
+            icon.move(final_x, final_y)
+            
         self.update_min_size()
 
     def set_edit_mode(self, enabled):

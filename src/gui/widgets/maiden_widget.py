@@ -95,6 +95,28 @@ class MaidenWidget(QWidget):
 
         self.update_min_size()
 
+    def update_positions(self):
+        spacing = 60
+        x = 10
+        y = 10
+        
+        for name in self.maidens:
+            lbl = self.labels.get(name)
+            if not lbl: continue
+            
+            # Check position
+            pos = self.layout_manager.get_position("maidens", name)
+            if pos:
+                final_x, final_y = pos
+            else:
+                final_x = x
+                final_y = y
+                x += spacing
+                
+            lbl.move(final_x, final_y)
+
+        self.update_min_size()
+
     def set_edit_mode(self, enabled):
         for lbl in self.labels.values():
             lbl.set_edit_mode(enabled)

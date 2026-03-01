@@ -25,7 +25,7 @@ class BaseInfoDialog(QDialog):
 class AboutDialog(BaseInfoDialog):
     def __init__(self, parent=None):
         content = """
-        <h3>Lufia 2 Manual Tracker v1.4</h3>
+        <h3>Lufia 2 Manual Tracker v1.4.3</h3>
         <p><b>My Discord:</b><br>Rndmmeme#5100</p>
         
         <p><b>Lufia 2 Community on Discord:</b><br>Ancient Cave</p>
@@ -46,11 +46,11 @@ class AboutDialog(BaseInfoDialog):
         
         <p><b>Disclaimer:</b><br>
         If you want to use this tracker for competitive plays please make sure it is accepted for tracking. 
-        Also make sure to either not use the auto tracking function or to ask whether it is allowed to be used.</p>
+        </p>
         
         <p><b>RndmMeme</b><br>
         Lufia 2 Auto Tracker v1.3 @2024-2025<br>
-        Ported to Manual Tracker v1.4 (PyQt6) @2026</p>
+        Ported to Manual Tracker v1.4.3 (PyQt6) @2026</p>
         """
         super().__init__("About", content, parent)
 
@@ -93,13 +93,15 @@ class HelpDialog(QDialog):
         
         # 1. Introduction
         self.add_page("Introduction", """
-            <h3>Welcome to RndmMeme's Lufia 2 Manual Tracker v1.4!</h3>
+            <h3>Welcome to RndmMeme's Lufia 2 Manual Tracker v1.4.3!</h3>
             <p>This tracker helps you keep track of your randomizer run with advanced features like map visualization and inventory management.</p>
-            <p><b>New in v1.4:</b></p>
+            <p><b>New in v1.4.3:</b></p>
             <ul>
-                <li>Docking Layout System (Draggable/Resizable Panels)</li>
-                <li>Character Map Sprites</li>
-                <li>Advanced Map Scaling</li>
+                <li><b>Custom map attributes:</b> Shape profiles for Cities and Dungeons.</li>
+                <li><b>Custom Color:</b> Custom color overriding for Cities.</li>
+                <li><b>Item / Spell Search:</b> Accessible via 'Add' button in Items/Spells widget. (No longer on Map right click). Active search city displays a cyan highlight on Map.</li>
+                <li><b>Layout Recovery:</b> Custom menu <i>Reset Picture Positions</i> to revert icons to their default arrangement.</li>
+                <li><b>Instant Map Tooltips:</b> Mouse hover delay on map dots eliminated.</li>
             </ul>
         """)
         
@@ -118,6 +120,7 @@ class HelpDialog(QDialog):
                 <li>Toggle 'Edit Layout' in Options.</li>
                 <li>Drag and drop ANY icon in Characters, Tools, or Keys widgets to your preferred order.</li>
                 <li>Your layout is saved automatically.</li>
+                <li>Use <b>Custom &gt; Reset Picture Positions</b> to restore icons to default configuration.</li>
             </ul>
         """)
         
@@ -131,17 +134,20 @@ class HelpDialog(QDialog):
         self.add_page("Map & Items", """
             <h3>Map Interaction</h3>
             <ul>
-                <li><b>Left-Click Dungeon Dot:</b> Cycle state (Red -> Green -> Grey -> Red).</li>
-                <li><b>Right-Click City (Yellow):</b> Open Item Search to register shop contents.</li>
-                <li><b>Right-Click Location:</b> Open Character Assignment menu.</li>
+                <li><b>Left-Click Dungeon:</b> Cycle state (Red -> Green -> Grey -> Red).</li>
+                <li><b>Right-Click Dungeon:</b> Open Character Assignment menu.</li>
+            </ul>
+            <h3>Appearance & Shapes</h3>
+            <ul>
+                <li>Use <b>Custom &gt; City Color</b> to adjust the default color of unconquered cities.</li>
+                <li>Use <b>Custom &gt; City Shape</b> to configure city shape profiles.</li>
+                <li>Use <b>Custom &gt; Dungeon Shape</b> to assign geometric structures to all dungeons.</li>
             </ul>
             <h3>Color Codes</h3>
             <ul>
                 <li><span style="color:red">Red</span>: Not accessible</li>
-                <li><span style="color:orange">Orange</span>: Partially accessible / Glitched</li>
                 <li><span style="color:green">Green</span>: Fully accessible</li>
                 <li><span style="color:grey">Grey</span>: Cleared / Looted</li>
-                <li><span style="color:#CCCC00">Yellow</span>: City / Shop check</li>
             </ul>
         """)
 

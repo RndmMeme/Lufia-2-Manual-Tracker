@@ -29,31 +29,31 @@ class CharacterCell(QWidget):
         self.edit_mode = False
         self._drag_start_pos = None
 
-        self.layout = QVBoxLayout()
-        self.layout.setContentsMargins(0,0,0,0)
-        self.layout.setSpacing(1)
-        self.setLayout(self.layout)
+        self.main_layout = QVBoxLayout()
+        self.main_layout.setContentsMargins(0,0,0,0)
+        self.main_layout.setSpacing(1)
+        self.setLayout(self.main_layout)
         
         # Icon
         self.icon_label = DraggableLabel(name, self)
         self.icon_label.clicked_signal.connect(lambda: self.clicked.emit(self.name))
-        self.layout.addWidget(self.icon_label, alignment=Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignTop)
+        self.main_layout.addWidget(self.icon_label, alignment=Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignTop)
         
         # Name
         self.name_label = QLabel(name)
         self.name_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.name_label.setStyleSheet("font-size: 11px; font-weight: bold; color: white;")
-        self.layout.addWidget(self.name_label, alignment=Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignTop)
+        self.main_layout.addWidget(self.name_label, alignment=Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignTop)
         
         # Location (Found At)
         self.loc_label = QLabel("")
         self.loc_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.loc_label.setWordWrap(True)
         self.loc_label.setStyleSheet("font-size: 9px; color: #AAAAAA;")
-        self.layout.addWidget(self.loc_label, alignment=Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignTop)
+        self.main_layout.addWidget(self.loc_label, alignment=Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignTop)
         self.loc_label.hide()
         
-        self.layout.addStretch()
+        self.main_layout.addStretch()
         
     # (Methods set_edit_mode, mousePress/Move/Release... remain same)
 
@@ -187,21 +187,24 @@ class CharactersCanvas(QWidget):
             if name not in self.cells: continue
             cell = self.cells[name]
             
-            # Check Manual Override
-            pos = self.layout_manager.get_position("characters", name)
-            if pos:
-                cell.move(pos[0], pos[1])
-                continue
-                
             # Resize cell to fit content (Dynamic Height)
-            if cell.layout():
-                cell.layout().activate()
+            if hasattr(cell, 'main_layout') and cell.main_layout:
+                cell.main_layout.activate()
             cell.adjustSize() 
             w = cell.width()
             h = cell.height()
             
-            # Place in Grid
-            cell.move(current_x, current_y)
+            # Default Layout Position
+            default_x = current_x
+            default_y = current_y
+            
+            # Check Manual Override
+            pos = self.layout_manager.get_position("characters", name)
+            if pos:
+                cell.move(pos[0], pos[1])
+            else:
+                cell.move(default_x, default_y)
+                
             current_row_cells.append(cell)
             row_max_h = max(row_max_h, h)
             

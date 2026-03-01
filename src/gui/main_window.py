@@ -57,6 +57,13 @@ class MainWindow(QMainWindow):
         self.menu_ribbon.player_size_requested.connect(self.map_widget.set_player_scale)
         self.menu_ribbon.edit_layout_toggled.connect(self._set_edit_mode)
         
+        # Custom Styling/Reset Overrides
+        self.menu_ribbon.city_color_requested.connect(self._pick_city_color)
+        self.menu_ribbon.city_shape_requested.connect(self._on_city_shape_requested)
+        self.menu_ribbon.dungeon_shape_requested.connect(self._on_dungeon_shape_requested)
+        self.menu_ribbon.reset_pictures_requested.connect(self._on_reset_pictures_requested)
+        self.menu_ribbon.save_layout_default_requested.connect(self._on_save_layout_default_requested)
+        
         # Save/Load/Reset
         self.menu_ribbon.reset_requested.connect(self._handle_reset)
         self.menu_ribbon.save_requested.connect(self._handle_save)
@@ -119,6 +126,38 @@ class MainWindow(QMainWindow):
              self.map_widget.set_player_arrow_shape("sprite")
         else:
              self.map_widget.set_player_arrow_shape(shape)
+
+    def _pick_city_color(self):
+        from PyQt6.QtWidgets import QColorDialog
+        from PyQt6.QtGui import QColor
+        color = QColorDialog.getColor(initial=QColor("orange"), parent=self, title="Pick City Color")
+        if color.isValid():
+            hex_color = color.name()
+            self._city_color = hex_color
+            self.map_widget.set_city_color_override(hex_color)
+
+    def _on_city_shape_requested(self, shape):
+        self._city_shape = shape
+        self.map_widget.set_city_shape(shape)
+
+    def _on_dungeon_shape_requested(self, shape):
+        self._dungeon_shape = shape
+        self.map_widget.set_dungeon_shape(shape)
+
+    def _on_save_layout_default_requested(self):
+        """Saves current drag-and-drop widget layout as the user's default fallback configuration."""
+        self.layout_manager.save_custom_as_default()
+
+    def _on_reset_pictures_requested(self):
+        self.layout_manager.reset_to_default()
+        if hasattr(self, 'characters_widget'):
+            self.characters_widget.canvas._reflow_grid()
+        if hasattr(self, 'maiden_widget'):
+            self.maiden_widget.update_positions()
+        if hasattr(self, 'tools_widget'):
+            self.tools_widget.grid.update_positions()
+        if hasattr(self, 'scenario_widget'):
+            self.scenario_widget.grid.update_positions()
 
     def _update_player_sprite_if_active(self):
         leader = self.state_manager.get_active_party_leader()
@@ -248,6 +287,9 @@ class MainWindow(QMainWindow):
         self.tools_widget.connect_signals(self.state_manager)
         self.scenario_widget.connect_signals(self.state_manager)
         
+        # Connect Items Widget Add Button
+        self.items_widget.add_requested.connect(lambda: self._open_item_search())
+        
         # Logic Loop Trigger (Inventory Change -> Refresh All)
         self.state_manager.inventory_changed.connect(lambda _: self._refresh_all())
         
@@ -352,7 +394,7 @@ class MainWindow(QMainWindow):
         
         cities = self.data_loader.get_cities()
         if name in cities:
-            self._open_item_search(name)
+            pass # Item Search logic was moved to ItemsWidget in v1.4.3
         else:
             self._open_character_assignment(name)
 
@@ -415,12 +457,29 @@ class MainWindow(QMainWindow):
         self.map_widget.add_character_sprite(location, name, full_path)
 
 
-    def _open_item_search(self, location_name):
+    def _open_item_search(self, location_name=None):
+        if not location_name:
+            cities = getattr(self, '_cities_cache', None)
+            if not cities:
+                 cities = self.data_loader.get_cities()
+                 self._cities_cache = cities
+            
+            # Sort for deterministic first element or use first
+            sorted_cities = sorted(list(cities))
+            location_name = sorted_cities[0] if sorted_cities else ""
+
         # Parent=None to allow independent window (Taskbar entry, Alt-Tab, free movement)
         dlg = ItemSearchDialog(location_name, self.data_loader, parent=None)
         dlg.item_added.connect(self._on_shop_item_added)
         
+        def highlight_loc(name):
+             self.map_widget.highlight_location(name)
+             
+        dlg.location_changed.connect(highlight_loc)
+        highlight_loc(location_name)
+        
         dlg.exec() # Blocking
+        self.map_widget.clear_highlight()
         
         # Cleanup
         dlg.deleteLater()
@@ -442,6 +501,10 @@ class MainWindow(QMainWindow):
              settings.setValue("playerColor", getattr(self, "_player_color", ""))
              settings.setValue("playerShape", getattr(self.map_widget, "_player_shape", "triangle"))
              settings.setValue("playerScale", getattr(self.map_widget, "_player_scale", 1.0))
+             
+             settings.setValue("cityColor", getattr(self, "_city_color", ""))
+             settings.setValue("cityShape", getattr(self, "_city_shape", ""))
+             settings.setValue("dungeonShape", getattr(self, "_dungeon_shape", ""))
 
         except Exception as e:
              logging.error(f"Failed to save settings: {e}")
@@ -477,6 +540,20 @@ class MainWindow(QMainWindow):
         p_scale = settings.value("playerScale", type=float)
         if p_scale:
             self.map_widget.set_player_scale(p_scale)
+
+        c_color = settings.value("cityColor")
+        if c_color:
+             self._city_color = c_color
+             if hasattr(self.map_widget, "set_city_color_override"):
+                  self.map_widget.set_city_color_override(c_color)
+
+        c_shape = settings.value("cityShape")
+        if c_shape:
+             self._on_city_shape_requested(c_shape)
+             
+        d_shape = settings.value("dungeonShape")
+        if d_shape:
+             self._on_dungeon_shape_requested(d_shape)
 
 
 class PersistentDockWidget(QDockWidget):
